@@ -47,6 +47,7 @@ function init() {
                     gltf.scene.castShadow=true;
                     gltf.scene.name="geometry";
                     scene.add(gltf.scene);
+                    geometry=null;
                 
                 }, undefined, function ( error ) {
                 
@@ -54,13 +55,14 @@ function init() {
                 
                 } );
                 return;
-            case "Scifi_girl":
+            case "Girl":
                 loader.load( './assets/model/scifi_girl/scene.gltf', function ( gltf ) {
                     scene.remove(scene.getObjectByName("geometry"));
                     gltf.scene.scale.set(5,5,5);
                     gltf.scene.castShadow=true;
                     gltf.scene.name="geometry";
                     scene.add(gltf.scene);
+                    geometry=null;
                 
                 }, undefined, function ( error ) {
                 
@@ -79,6 +81,33 @@ function init() {
 
         scene.add(mesh);
        
+    });
+    
+    $(".surface").click(function () {
+        if(geometry!=null){
+            scene.remove(scene.getObjectByName("geometry"));
+
+            var materialName = $(this).text(),
+                materialColor = material.color;
+
+            switch (materialName) {
+                case "Point":
+                    material = new THREE.PointsMaterial({ color: materialColor, size: 0.2 });
+                    mesh = new THREE.Points(geometry, material);
+                    break;
+                case "Line":
+                    material = new THREE.LineBasicMaterial({ color: materialColor });
+                    mesh = new THREE.Line(geometry, material);
+                    break;
+                case "Solid":
+                    material = new THREE.MeshBasicMaterial({ color: materialColor });
+                    mesh = new THREE.Mesh(geometry, material);
+                    break;
+            }
+            mesh.name = "geometry";
+            mesh.castShadow = true; // Shadow (đổ bóng).
+            scene.add(mesh);
+        }
     });
 
     var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
