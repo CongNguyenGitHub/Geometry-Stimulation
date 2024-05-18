@@ -1,7 +1,7 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { TeapotGeometry } from 'three/examples/jsm/geometries/TeapotGeometry';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import * as THREE from "three";
+import { OrbitControls } from "lib/OrbitControls.js";
+import { TeapotGeometry } from "lib/TeapotGeometry.js";
+import { GLTFLoader } from "lib/GLTFLoader.js";
 function init() {
     var scene = new THREE.Scene();
     var loader = new GLTFLoader();
