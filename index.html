@@ -4,32 +4,57 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="./assets/css/style.css" />
         <script type="importmap">
             {
               "imports": {
-                "three": "./assets/lib/three.module.js",
-                "lib/" : "./assets/lib/"
+                "three": "./assets/js/lib/three.module.js",
+                "lib/" : "./assets/js/lib/"
               }
             }
         </script>
-        <title>Final Project</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+        <title>Geometry Simulator</title>
+        <link rel="icon" href="./assets/images/seed-of-life.png" type="image/png">
     </head>
     <body>
         <div class="final_project">
             <header class="header">
                 <div class="navbar">
-                    <ul class="navbar__title">
-                        <li class="navbar__title-letter"><a href="" class="navbar__title-link">ĐỒ ÁN ĐỒ HOẠ MÁY TÍNH - MÔ PHỎNG HÌNH HỌC 3D CƠ BẢN</a></li>
-                    </ul>
                     <ul class="navbar__list">
                         <li class="navbar__item">
                             <a href="#" class="navbar__item-link">
+                                File
+                                <i class="fa-solid fa-chevron-down fa-xs" style="color: #ffffff;"></i>
+                            </a>
+                            <ul class="navbar__subnav navbar__subnav_one">
+                                <li class="navbar__subnav-item">
+                                    <a href="#" class="subnav-item__link file" id="reset">New</a>
+                                </li>
+                                <li class="navbar__subnav-item">
+                                    <label for="loadTexture">
+                                        <a class="subnav-item__link file" aria-hidden="true">Texture</a>
+                                        <input type="file" id="loadTexture" accept="image/*, video/*" style="display: none;">
+                                    </label>
+                                </li>
+                                <li class="navbar__subnav-item">
+                                    <label for="import">
+                                        <a class="subnav-item__link file" aria-hidden="true">Import</a>
+                                        <input type="file" id="import" accept=".gltf" style="display: none;">
+                                    </label>
+                                </li>
+                                <li class="navbar__subnav-item">
+                                    <a href="#" class="subnav-item__link file" id="export">Export</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="navbar__item">
+                            <a href="#" class="navbar__item-link">
                                 Geometry
-                                <i class="fas fa-sort-down"></i>
+                                <i class="fa-solid fa-chevron-down fa-xs" style="color: #ffffff;"></i>
                             </a>
                             <ul class="navbar__subnav navbar__subnav_one">
                                 <li class="navbar__subnav-item">
@@ -67,7 +92,7 @@
                         <li class="navbar__item">
                             <a href="#" class="navbar__item-link">
                                 Surface
-                                <i class="fas fa-sort-down"></i>
+                                <i class="fa-solid fa-chevron-down fa-xs" style="color: #ffffff;"></i>
                             </a>
                             <ul class="navbar__subnav navbar__subnav_two">
                                 <li class="navbar__subnav-item">
@@ -82,10 +107,35 @@
                             </ul>
                         </li>
                     </ul>
+
+                    <ul class="navbar__title">
+                        <li class="navbar__title-letter">
+                            <a href="" class="navbar__title-link">
+                                3D GEOMETRY SIMULATOR
+                            </a></li>
+                    </ul>
                 </div>
             </header>
+            <div class="options">
+                <div id="grid">
+                    <input type="checkbox" id="gridBox" checked>
+                    <label for="gridBox">Grid</label>
+                </div>
+            </div>
+            <div class="affine">
+                <div id="translate" class="affine__item">
+                    <i class="fa-solid fa-arrows-up-down-left-right fa-xl" style="color: #15151e;"></i>
+                </div>
+                <div id="rotate" class="affine__item">
+                    <i class="fa-solid fa-arrows-rotate fa-xl" style="color: #15151e;"></i>
+                </div>
+                <div id="scale" class="affine__item">
+                    <i class="fa-solid fa-up-right-and-down-left-from-center fa-xl" style="color: #15151e;"></i>
+                </div>
+            </div>
     </body>
     <div id="webgl">
         <script type="module" src="./main.js"></script>
+        <script type="module" src="./js/events.js"></script>
     </div>
 </html>

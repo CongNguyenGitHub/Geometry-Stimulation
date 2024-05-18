@@ -4,12 +4,10 @@
     margin: 0;
 }
 
-/* Chung */
 .final_project {
     position: relative;
 }
 
-/* Navbar */
 .navbar {
     position: fixed;
     top: 0;
@@ -22,10 +20,16 @@
     justify-content: space-between;
 }
 
+.navbar__title {
+    margin: auto 40px;
+    /* align-items: center; */
+}
+
 .navbar__title-link,
 .navbar__item-link {
     text-decoration: none;
     color: white;
+    font-family: "Ubuntu", "Courier New";
 }
 
 .navbar__title-letter {
@@ -33,11 +37,12 @@
     font-weight: 500;
     list-style: none;
     line-height: 46px;
-    margin-left: 40px;
+    /* margin-left: 40px; */
 }
 
 .navbar__list {
     list-style-type: none;
+    font-family: "Ubuntu", "Courier New";
 }
 
 .navbar__list,
@@ -50,7 +55,8 @@
 
 .navbar__list {
     line-height: 46px;
-    margin-right: 8px;
+    /* margin-right: 8px; */
+    padding-left: 10px;
 }
 
 .navbar__item {
@@ -63,19 +69,24 @@
     width: 100%;
 }
 
+.fa-chevron-down:before {
+    margin: 4px;
+}
+
 .navbar__item:hover .navbar__item-link {
     cursor: pointer;
     background-color: #ccc;
     color: #000;
 }
 
-.navbar__item:hover .navbar__subnav {
-    display: block;
+.navbar__item:hover .navbar__item-link .fa-chevron-down:before {
+    content: "\f077";
+    color: #15151e;
 }
 
-.fa-sort-down:before {
-    margin: 3px;
-    font-size: 20px;
+.navbar__item:hover .navbar__subnav {
+    display: block;
+    width: 100%;
 }
 
 .navbar__subnav {
@@ -88,7 +99,6 @@
     list-style-type: none;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
-    animation: FadeIn ease 1s;
 }
 
 .navbar__subnav_one {
@@ -133,92 +143,45 @@
     border-bottom-right-radius: 5px;
 }
 
-@keyframes FadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-5px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 /* WebGL */
 canvas {
     position: relative;
     top: 46px;
 }
 
-.WebGL__controls {
+.options {
     position: absolute;
+    top: 70px; 
+    right: 40px; 
     z-index: 1;
-    top: 50px;
-    left: 12px;
-    width: 170px;
-    height: 190px;
+    font-family: "Ubuntu", "Courier New";
 }
 
-.controls-object,
-.controls-music {
-    display: flex;
-    padding: 8px 0;
+.affine {
+    position: absolute;
+    top: 100px; 
+    right: 40px; 
+    z-index: 1;
 }
 
-.controls-btn,
-.controls-music-btn {
-    /* margin: 16px; */
-    width: 32px;
-    height: 32px;
-    background-color: #15151e;
-    text-align: center;
-    border-radius: 8px;
-    border: 1px solid #fff;
-    /* box-shadow: 0 0 12px 4px rgb(255 255 255 / 30%); */
+.affine__item {
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 10px;
+    margin: 20px auto;
+    border-radius: 5px;
+    width: 44px;
+    height: 44px;
+    align-content: center;
 }
 
-.controls-btn:hover,
-.controls-music-btn:hover {
+.affine__item:hover {
     cursor: pointer;
-    background-color: #fff;
+    background-color: #15151e;
 }
 
-.controls-btn i,
-.controls-music-btn i {
-    line-height: 32px;
-    font-size: 12px;
+.affine__item:hover .fa-arrows-up-down-left-right::before,
+.affine__item:hover .fa-arrows-rotate::before,
+.affine__item:hover .fa-up-right-and-down-left-from-center::before {
     color: #fff;
 }
 
-.controls-btn:hover i,
-.controls-music-btn:hover i {
-    line-height: 32px;
-    font-size: 12px;
-    color: #15151e;
-}
-
-.controls-btn.active,
-.controls-music-btn.active {
-    background-color: #fff;
-}
-
-.controls-btn.active i,
-.controls-music-btn.active i {
-    color: #15151e;
-}
-
-.controls-desc,
-.controls-music-desc {
-    color: #fff;
-    line-height: 32px;
-    margin-left: 8px;
-}
-
-/* .final_project-audio {
-    display: none;
-} */
-
-#GUI {
-    position: relative;
-    top: 46px;
-}
