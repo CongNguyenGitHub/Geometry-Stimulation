@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from "three"
 import { OrbitControls } from "lib/OrbitControls.js";
 import { TeapotGeometry } from "lib/TeapotGeometry.js";
 import { GLTFLoader } from "lib/GLTFLoader.js";
@@ -26,13 +26,17 @@ function init() {
             gridHelper.visible = false;
         }
     });
-
+    let hasFeature = false;
+    let colorFolder, rotationFolder, posFolder, scaleFolder;
     $(".geometry").click(function () {
-
         var geometryName = $(this).text();
+        var geometry;
+        var parameters;
+
         switch (geometryName) {
             case "Box":
                 geometry = new THREE.BoxGeometry(5, 5, 5);
+                parameters = { width: 5, height: 5, depth: 5 };
                 break;
             case "Sphere":
                 geometry = new THREE.SphereGeometry(3);
@@ -47,7 +51,7 @@ function init() {
                 geometry = new THREE.TorusGeometry(4, 2, 16, 100);
                 break;
             case "Teapot":
-                geometry=new TeapotGeometry(4, 10);
+                geometry = new TeapotGeometry(4, 10);
                 break;
             case "Tube":
                 geometry = new THREE.TubeGeometry(getTube(6), 20, 2, 8, false);
@@ -56,46 +60,81 @@ function init() {
                 geometry = new THREE.ExtrudeGeometry(getHeart(), { amount: 2, bevelEnable: true, bevelSegments: 2, steps: 2, bevelSize: 1, bevelThickness: 1 });
                 break;
             case "Car":
-                loader.load( './assets/model/car/scene.gltf', function ( gltf ) {
+                loader.load('./assets/model/car/scene.gltf', function (gltf) {
                     scene.remove(scene.getObjectByName("geometry"));
-                    gltf.scene.scale.set(5,5,5);
-                    gltf.scene.castShadow=true;
-                    gltf.scene.name="geometry";
+                    gltf.scene.scale.set(5, 5, 5);
+                    gltf.scene.castShadow = true;
+                    gltf.scene.name = "geometry";
                     scene.add(gltf.scene);
-                    geometry=null;
-                
-                }, undefined, function ( error ) {
-                
-                    console.error( error );
-                
-                } );
+                    geometry = null;
+                }, undefined, function (error) {
+                    console.error(error);
+                });
                 return;
             case "Girl":
-                loader.load( './assets/model/scifi_girl/scene.gltf', function ( gltf ) {
+                loader.load('./assets/model/scifi_girl/scene.gltf', function (gltf) {
                     scene.remove(scene.getObjectByName("geometry"));
-                    gltf.scene.scale.set(5,5,5);
-                    gltf.scene.castShadow=true;
-                    gltf.scene.name="geometry";
+                    gltf.scene.scale.set(5, 5, 5);
+                    gltf.scene.castShadow = true;
+                    gltf.scene.name = "geometry";
                     scene.add(gltf.scene);
-                    geometry=null;
-                
-                }, undefined, function ( error ) {
-                
-                    console.error( error );
-                
-                } );
+                    geometry = null;
+                }, undefined, function (error) {
+                    console.error(error);
+                });
                 return;
-
         }
-        mesh = new THREE.Mesh(geometry, material);
 
+        var mesh = new THREE.Mesh(geometry, material);
         scene.remove(scene.getObjectByName("geometry"));
-
         mesh.name = "geometry";
-        mesh.castShadow = true; 
-
+        mesh.castShadow = true;
         scene.add(mesh);
-       
+
+        if (hasFeature) {
+            if (colorFolder) gui.removeFolder(colorFolder);
+            if (rotationFolder) gui.removeFolder(rotationFolder);
+            if (posFolder) gui.removeFolder(posFolder);
+            if (scaleFolder) gui.removeFolder(scaleFolder);
+        }
+
+        hasFeature = true;
+
+        var params1 = {
+            color: 0xff00ff
+        };
+        colorFolder = gui.addFolder('Color');
+        colorFolder.addColor(params1, 'color').onChange(function () {
+            mesh.material.color.set(params1.color);
+        });
+        colorFolder.open();
+
+        rotationFolder = gui.addFolder('Rotation');
+        rotationFolder.add(mesh.rotation, 'x', 0, Math.PI * 2);
+        rotationFolder.add(mesh.rotation, 'y', 0, Math.PI * 2);
+        rotationFolder.add(mesh.rotation, 'z', 0, Math.PI * 2);
+        rotationFolder.open();
+
+        posFolder = gui.addFolder('Position');
+        posFolder.add(mesh.position, 'x', -100, 100);
+        posFolder.add(mesh.position, 'y', -100, 100);
+        posFolder.add(mesh.position, 'z', -100, 100);
+        posFolder.open();
+
+        var params2 = {
+            scaleX: 1,
+            scaleY: 1,
+            scaleZ: 1
+        };
+        scaleFolder = gui.addFolder("Scale");
+        scaleFolder.add(params2, 'scaleX', 0.1, 5).name('Scale X').onChange(updateScale);
+        scaleFolder.add(params2, 'scaleY', 0.1, 5).name('Scale Y').onChange(updateScale);
+        scaleFolder.add(params2, 'scaleZ', 0.1, 5).name('Scale Z').onChange(updateScale);
+        scaleFolder.open();
+
+        function updateScale() {
+            mesh.scale.set(params2.scaleX, params2.scaleY, params2.scaleZ);
+        }
     });
     
     $("#surfaceSelect").click(function () {
