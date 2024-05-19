@@ -264,22 +264,37 @@ function init() {
     scene.add(transformControls);
 
     $("#translate-light").click(function() {
-        if (transformControlsEnabled == false) {
+        if ($(this).hasClass("icons-clicked")) {
+            controls.enabled = true;
+            transformControlsEnabled = false;
+            transformControls.detach();
+            $(this).removeClass("icons-clicked");
+        }
+        else {
             if (scene.getObjectByName("light")) {
                 controls.enabled = false;
                 transformControls.detach();
                 transformControls.setMode("translate");
                 transformControls.attach(scene.getObjectByName("light"));
+                transformControls.addEventListener("change", function() {
+                    lightHelper.update();
+                });
                 transformControlsEnabled = true;
                 $(this).addClass("icons-clicked");
             }
         }
-        else {
+        
+    });
+
+    transformControls.addEventListener("mousedown", function() {
+        controls.enabled = false;
+        transformControlsEnabled = true;
+    });
+    
+    document.addEventListener("mousedown", function() {
+        if (!transformControls.dragging) {
             controls.enabled = true;
             transformControlsEnabled = false;
-            transformControls.detach();
-            // removeClassClicked();
-            $(this).removeClass("icons-clicked");
         }
     });
 
