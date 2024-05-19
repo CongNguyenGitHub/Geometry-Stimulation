@@ -260,25 +260,28 @@ function init() {
     controls.enableDamping = true;
 
     var transformControls = new TransformControls(camera, renderer.domElement);
+    var transformControlsEnabled = false;
     scene.add(transformControls);
 
     $("#translate-light").click(function() {
-        if (scene.getObjectByName("light")) {
-            controls.enabled = false;
+        if (transformControlsEnabled == false) {
+            if (scene.getObjectByName("light")) {
+                controls.enabled = false;
+                transformControls.detach();
+                transformControls.setMode("translate");
+                transformControls.attach(scene.getObjectByName("light"));
+                transformControlsEnabled = true;
+                $(this).addClass("icons-clicked");
+            }
+        }
+        else {
+            controls.enabled = true;
+            transformControlsEnabled = false;
             transformControls.detach();
-            transformControls.setMode("translate");
-            transformControls.attach(scene.getObjectByName("light"));
+            // removeClassClicked();
+            $(this).removeClass("icons-clicked");
         }
     });
-
-    function onClickOutsideTransformControls(event) {
-        if (controls.enabled == false && transformControls.domElement.contains(event.target)) {
-            controls.enabled = true;
-            transformControls.detach();
-        }
-    }
-    
-    document.addEventListener('click', onClickOutsideTransformControls);
 
     update(renderer, scene, camera, controls);
 }

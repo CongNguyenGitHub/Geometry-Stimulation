@@ -256,6 +256,18 @@ canvas {
     color: #ccc;
 }
 
+.icons-clicked {
+    background-color: #000;
+    box-shadow: 0 0 4px rgb(255 255 255 / 30%);
+}
+
+.icons-clicked .fa-arrows-up-down-left-right::before,
+.icons-clicked .fa-arrows-rotate::before,
+.icons-clicked .fa-up-right-and-down-left-from-center::before,
+.icons-clicked .fa-lightbulb::before {
+    color: #ccc;
+}
+
 .affine__title-text {
     background-color: rgba(0, 0, 0, 0.7);
     color: #ccc;
