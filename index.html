@@ -26,35 +26,35 @@
                 <div class="navbar">
                     <ul class="navbar__list">
                         <li class="navbar__item">
-                            <a href="#" class="navbar__item-link">
+                            <a href="#" class="navbar__item-link file-link">
                                 File
-                                <i class="fa-solid fa-chevron-down fa-xs" style="color: #ffffff;"></i>
+                                <i class="fa-solid fa-chevron-down fa-xs" style="color: #ccc;"></i>
                             </a>
-                            <ul class="navbar__subnav navbar__subnav_one">
+                            <ul class="navbar__subnav navbar__subnav_zero">
                                 <li class="navbar__subnav-item">
                                     <a href="#" class="subnav-item__link file" id="reset">New</a>
                                 </li>
                                 <li class="navbar__subnav-item">
                                     <label for="loadTexture">
-                                        <a class="subnav-item__link file" aria-hidden="true">Texture</a>
+                                        <a class="subnav-item__link file" aria-hidden="true">Load Texture</a>
                                         <input type="file" id="loadTexture" accept="image/*, video/*" style="display: none;">
                                     </label>
                                 </li>
                                 <li class="navbar__subnav-item">
                                     <label for="import">
-                                        <a class="subnav-item__link file" aria-hidden="true">Import</a>
+                                        <a class="subnav-item__link file" aria-hidden="true">Import GLTF</a>
                                         <input type="file" id="import" accept=".gltf" style="display: none;">
                                     </label>
                                 </li>
                                 <li class="navbar__subnav-item">
-                                    <a href="#" class="subnav-item__link file" id="export">Export</a>
+                                    <a href="#" class="subnav-item__link file" id="export">Export GLTF</a>
                                 </li>
                             </ul>
                         </li>
                         <li class="navbar__item">
                             <a href="#" class="navbar__item-link">
                                 Geometry
-                                <i class="fa-solid fa-chevron-down fa-xs" style="color: #ffffff;"></i>
+                                <i class="fa-solid fa-chevron-down fa-xs" style="color: #ccc;"></i>
                             </a>
                             <ul class="navbar__subnav navbar__subnav_one">
                                 <li class="navbar__subnav-item">
@@ -90,19 +90,82 @@
                             </ul>
                         </li>
                         <li class="navbar__item">
-                            <a href="#" class="navbar__item-link">
-                                Surface
-                                <i class="fa-solid fa-chevron-down fa-xs" style="color: #ffffff;"></i>
+                            <a href="#" class="navbar__item-link texture-link">
+                                Texture
+                                <i class="fa-solid fa-chevron-down fa-xs" style="color: #ccc;"></i>
                             </a>
                             <ul class="navbar__subnav navbar__subnav_two">
                                 <li class="navbar__subnav-item">
-                                    <a href="#" class="subnav-item__link surface">Point</a>
+                                    <a href="#" class="subnav-item__link texture">Texture 1</a>
                                 </li>
                                 <li class="navbar__subnav-item">
-                                    <a href="#" class="subnav-item__link surface">Line</a>
+                                    <a href="#" class="subnav-item__link texture">Texture 2</a>
                                 </li>
                                 <li class="navbar__subnav-item">
-                                    <a href="#" class="subnav-item__link surface">Solid</a>
+                                    <a href="#" class="subnav-item__link texture">Texture 3</a>
+                                </li>
+                                <li class="navbar__subnav-item">
+                                    <a href="#" class="subnav-item__link texture">Remove Texture</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="navbar__item">
+                            <a href="#" class="navbar__item-link light-link">
+                                Lights
+                                <i class="fa-solid fa-chevron-down fa-xs" style="color: #ccc;"></i>
+                            </a>
+                            <ul class="navbar__subnav navbar__subnav_three">
+                                <li class="navbar__subnav-item">
+                                    <a href="#" class="subnav-item__link light">Point Light</a>
+                                </li>
+                                <li class="navbar__subnav-item">
+                                    <a href="#" class="subnav-item__link light">Spot Light</a>
+                                </li>
+                                <li class="navbar__subnav-item">
+                                    <a href="#" class="subnav-item__link light">Directional Light</a>
+                                </li>
+                                <li class="navbar__subnav-item">
+                                    <a href="#" class="subnav-item__link light">Remove Light</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="navbar__item">
+                            <a href="#" class="navbar__item-link">
+                                Animation
+                                <i class="fa-solid fa-chevron-down fa-xs" style="color: #ccc;"></i>
+                            </a>
+                            <ul class="navbar__subnav navbar__subnav_four">
+                                <li class="navbar__subnav-item">
+                                    <a href="#" class="subnav-item__link animation">Animation Name 1</a>
+                                </li>
+                                <li class="navbar__subnav-item">
+                                    <a href="#" class="subnav-item__link animation">Animation Name 1</a>
+                                </li>
+                                <li class="navbar__subnav-item">
+                                    <a href="#" class="subnav-item__link animation">Animation Name 3</a>
+                                </li>
+                                <li class="navbar__subnav-item">
+                                    <a href="#" class="subnav-item__link animation">Remove Animation</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="navbar__item">
+                            <a href="#" class="navbar__item-link">
+                                Help
+                                <i class="fa-solid fa-chevron-down fa-xs" style="color: #ccc;"></i>
+                            </a>
+                            <ul class="navbar__subnav navbar__subnav_five">
+                                <li class="navbar__subnav-item">
+                                    <a href="https://github.com/CongNguyenGitHub/geometry-stimulation/tree/master" 
+                                    target="_blank" class="subnav-item__link help">Source Code</a>
+                                </li>
+                                <li class="navbar__subnav-item">
+                                    <a href="https://github.com/CongNguyenGitHub/geometry-stimulation/tree/master?tab=readme-ov-file#about"
+                                    target="_blank" class="subnav-item__link help">About</a>
+                                </li>
+                                <li class="navbar__subnav-item">
+                                    <a href="https://github.com/CongNguyenGitHub/geometry-stimulation/tree/master?tab=readme-ov-file#manual"
+                                    target="_blank" class="subnav-item__link help">Manual</a>
                                 </li>
                             </ul>
                         </li>
@@ -121,21 +184,41 @@
                     <input type="checkbox" id="gridBox" checked>
                     <label for="gridBox">Grid</label>
                 </div>
+                <div id="surface">
+                    <select id="surfaceSelect">
+                        <option value="Point">Point</option>
+                        <option value="Line">Line</option>
+                        <option value="Solid" selected>Solid</option>
+                    </select>
+                </div>
             </div>
             <div class="affine">
-                <div id="translate" class="affine__item">
-                    <i class="fa-solid fa-arrows-up-down-left-right fa-xl" style="color: #15151e;"></i>
+                <div class="affine__title">
+                    <span id="translate-text" class="affine__title-text">Translate Geometry</span>
+                    <span id="rotate-text" class="affine__title-text">Rotate Geometry</span>
+                    <span id="scale-text" class="affine__title-text">Scale Geometry</span>
+                    <span id="translate-light-text" class="affine__title-text">Translate Light</span>
                 </div>
-                <div id="rotate" class="affine__item">
-                    <i class="fa-solid fa-arrows-rotate fa-xl" style="color: #15151e;"></i>
-                </div>
-                <div id="scale" class="affine__item">
-                    <i class="fa-solid fa-up-right-and-down-left-from-center fa-xl" style="color: #15151e;"></i>
+                <div class="affine__icons">
+                    <div id="translate" class="affine__item">
+                        <i class="fa-solid fa-arrows-up-down-left-right fa-xl" style="color: #000;"></i>
+                    </div>
+                    <div id="rotate" class="affine__item">
+                        <i class="fa-solid fa-arrows-rotate fa-xl" style="color: #000;"></i>
+                    </div>
+                    <div id="scale" class="affine__item">
+                        <i class="fa-solid fa-up-right-and-down-left-from-center fa-xl" style="color: #000;"></i>
+                    </div>
+                    <div id="translate-light" class="affine__item">
+                        <i class="fa-solid fa-lightbulb fa-xl" style="color: #000000;"></i>
+                    </div>
                 </div>
             </div>
+            <div class="move_gui"></div>
     </body>
     <div id="webgl">
+        <script type="module" src="./assets/js/events.js"></script>
+        <script src="./assets/js/lib/dat.gui.min.js"></script>
         <script type="module" src="./main.js"></script>
-        <script type="module" src="./js/events.js"></script>
     </div>
 </html>

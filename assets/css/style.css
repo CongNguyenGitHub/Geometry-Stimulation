@@ -15,7 +15,7 @@
     right: 0;
     z-index: 1;
     height: 46px;
-    background-color: #15151e;
+    background-color: #000;
     display: flex;
     justify-content: space-between;
 }
@@ -28,7 +28,7 @@
 .navbar__title-link,
 .navbar__item-link {
     text-decoration: none;
-    color: white;
+    color: #ccc;
     font-family: "Ubuntu", "Courier New";
 }
 
@@ -67,6 +67,21 @@
     font-size: 17px;
     padding: 0 32px;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.light-link {
+    min-width: 150px;
+}
+
+.file-link {
+    min-width: 130px;
+}
+
+.texture-link {
+    min-width: 150px;
 }
 
 .fa-chevron-down:before {
@@ -75,13 +90,13 @@
 
 .navbar__item:hover .navbar__item-link {
     cursor: pointer;
-    background-color: #ccc;
+    background-color: #cccccc;
     color: #000;
 }
 
 .navbar__item:hover .navbar__item-link .fa-chevron-down:before {
     content: "\f077";
-    color: #15151e;
+    color: #000;
 }
 
 .navbar__item:hover .navbar__subnav {
@@ -94,27 +109,28 @@
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: #15151e;
+    background-color: #000;
     box-shadow: 0 0 4px rgb(255 255 255 / 30%);
     list-style-type: none;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
+    /* min-width: 140px; */
 }
 
-.navbar__subnav_one {
+/* .navbar__subnav_one {
     width: 154px;
 }
 .navbar__subnav_two {
     min-width: 139px;
-}
+} */
 
-.navbar__subnav_three {
-    min-width: 124px;
-}
+/* .navbar__subnav_three {
+    min-width: 140px;
+} */
 
-.navbar__subnav_four {
+/* .navbar__subnav_four {
     min-width: 159px;
-}
+} */
 
 .navbar__subnav-item {
     height: 30px;
@@ -126,7 +142,8 @@
     position: absolute;
     display: inline-block;
     width: 100%;
-    color: #fff;
+    /* min-width: 140px; */
+    color: #ccc;
     line-height: 30px;
     padding: 0 16px;
     font-size: 15px;
@@ -147,6 +164,22 @@
 canvas {
     position: relative;
     top: 46px;
+    display: block;
+}
+
+.move_gui {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 10px;
+    z-index: 1;
+}
+
+.cr.color input[type="text"] {
+    display: inline-block;
+    width: auto;
+    /* float: right; */
+    margin-left: 10px;
 }
 
 .options {
@@ -155,33 +188,87 @@ canvas {
     right: 40px; 
     z-index: 1;
     font-family: "Ubuntu", "Courier New";
+    color: #ccc;
+    display: flex;
+    align-items: center;
+}
+
+.options #surface {
+    margin-left: 20px;
+}
+
+.options #surface #surfaceSelect {
+    font-size: 17px;
+    font-family: "Ubuntu", "Courier New";
+    padding: 8px;
+    min-width: 80px;
+    min-height: 30px;
+    border-radius: 4px;
+    box-shadow: 0 0 4px rgb(0 0 0 / 10%);
+    background-color: #ccc;
 }
 
 .affine {
+    display: flex;
+    /* position: absolute;
+    top: 140px; */
+    
+}
+
+.affine__icons {
     position: absolute;
-    top: 100px; 
+    top: 140px; 
     right: 40px; 
     z-index: 1;
 }
 
+.affine__title {
+    position: absolute;
+    top: 140px; 
+    right: 100px; 
+    z-index: 1;
+}
+
 .affine__item {
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.7);
     padding: 10px;
     margin: 20px auto;
     border-radius: 5px;
     width: 44px;
     height: 44px;
-    align-content: center;
+    /* align-content: center; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 4px rgb(0 0 0 / 10%);
 }
 
 .affine__item:hover {
     cursor: pointer;
-    background-color: #15151e;
+    background-color: #000;
+    box-shadow: 0 0 4px rgb(255 255 255 / 30%);
 }
 
 .affine__item:hover .fa-arrows-up-down-left-right::before,
 .affine__item:hover .fa-arrows-rotate::before,
-.affine__item:hover .fa-up-right-and-down-left-from-center::before {
-    color: #fff;
+.affine__item:hover .fa-up-right-and-down-left-from-center::before,
+.affine__item:hover .fa-lightbulb::before {
+    color: #ccc;
 }
 
+.affine__title-text {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #ccc;
+    font-family: "Ubuntu", "Courier New";
+    font-size: 14px;
+    padding: 10px;
+    margin: 20px auto;
+    border-radius: 5px;
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 4px rgb(255 255 255 / 10%);
+    visibility: hidden;
+}
