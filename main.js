@@ -12,7 +12,7 @@ function init() {
     $(".move_gui").append($(gui.domElement));
     var geometry, material, mesh;
     var light, lightHelper, lightGUI, hasLight = false;
-    material = new THREE.MeshBasicMaterial({ color: "#ffffff" });
+    material = new THREE.MeshPhongMaterial({ color: "#ffffff" });
 
     var gridHelper = new THREE.GridHelper(150, 30, "#fff", "#fff");
     gridHelper.position.y = -0.1;
@@ -101,7 +101,7 @@ function init() {
         hasFeature = true;
 
         var params1 = {
-            color: 0xff00ff
+            color: 0xffffff
         };
         colorFolder = gui.addFolder('Color');
         colorFolder.addColor(params1, 'color').onChange(function () {
