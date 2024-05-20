@@ -27,16 +27,15 @@ function init() {
         }
     });
     let hasFeature = false;
-    let colorFolder, rotationFolder, posFolder, scaleFolder;
+    let colorFolder, materialFolder;
     $(".geometry").click(function () {
         var geometryName = $(this).text();
         var geometry;
-        var parameters;
+        var material = new THREE.MeshBasicMaterial({ color: 0xffffff });
 
         switch (geometryName) {
             case "Box":
                 geometry = new THREE.BoxGeometry(5, 5, 5);
-                parameters = { width: 5, height: 5, depth: 5 };
                 break;
             case "Sphere":
                 geometry = new THREE.SphereGeometry(3);
@@ -93,49 +92,49 @@ function init() {
 
         if (hasFeature) {
             if (colorFolder) gui.removeFolder(colorFolder);
-            if (rotationFolder) gui.removeFolder(rotationFolder);
-            if (posFolder) gui.removeFolder(posFolder);
-            if (scaleFolder) gui.removeFolder(scaleFolder);
+            if (materialFolder) gui.removeFolder(materialFolder);
         }
 
         hasFeature = true;
 
-        var params1 = {
+        var colorParams = {
             color: 0xffffff
         };
         colorFolder = gui.addFolder('Color');
-        colorFolder.addColor(params1, 'color').onChange(function () {
-            mesh.material.color.set(params1.color);
+        colorFolder.addColor(colorParams, 'color').onChange(function () {
+            mesh.material.color.set(colorParams.color);
         });
         colorFolder.open();
 
-        rotationFolder = gui.addFolder('Rotation');
-        rotationFolder.add(mesh.rotation, 'x', 0, Math.PI * 2);
-        rotationFolder.add(mesh.rotation, 'y', 0, Math.PI * 2);
-        rotationFolder.add(mesh.rotation, 'z', 0, Math.PI * 2);
-        rotationFolder.open();
-
-        posFolder = gui.addFolder('Position');
-        posFolder.add(mesh.position, 'x', -100, 100);
-        posFolder.add(mesh.position, 'y', -100, 100);
-        posFolder.add(mesh.position, 'z', -100, 100);
-        posFolder.open();
-
-        var params2 = {
-            scaleX: 1,
-            scaleY: 1,
-            scaleZ: 1
+        var materialParams = {
+            materialType: 'Basic'
         };
-        scaleFolder = gui.addFolder("Scale");
-        scaleFolder.add(params2, 'scaleX', 0.1, 5).name('Scale X').onChange(updateScale);
-        scaleFolder.add(params2, 'scaleY', 0.1, 5).name('Scale Y').onChange(updateScale);
-        scaleFolder.add(params2, 'scaleZ', 0.1, 5).name('Scale Z').onChange(updateScale);
-        scaleFolder.open();
+        materialFolder = gui.addFolder('Material');
+        materialFolder.add(materialParams, 'materialType', ['Basic', 'Phong', 'Standard', 'Lambert']).onChange(function () {
+            updateMaterial();
+        });
+        materialFolder.open();
 
-        function updateScale() {
-            mesh.scale.set(params2.scaleX, params2.scaleY, params2.scaleZ);
+        function updateMaterial() {
+            var materialColor = colorParams.color;
+            switch (materialParams.materialType) {
+                case 'Basic':
+                    material = new THREE.MeshBasicMaterial({ color: materialColor });
+                    break;
+                case 'Phong':
+                    material = new THREE.MeshPhongMaterial({ color: materialColor });
+                    break;
+                case 'Standard':
+                    material = new THREE.MeshStandardMaterial({ color: materialColor });
+                    break;
+                case 'Lambert':
+                    material = new THREE.MeshLambertMaterial({ color: materialColor });
+                    break;
+            }
+            mesh.material = material;
         }
     });
+
     
     $("#surfaceSelect").click(function () {
         if(geometry!=null){
