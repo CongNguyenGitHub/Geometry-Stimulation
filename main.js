@@ -5,6 +5,15 @@ import { GLTFLoader } from "lib/GLTFLoader.js";
 import { GLTFExporter } from "lib/GLTFExporter.js";
 import { TransformControls } from "lib/TransformControls.js";
 
+var activeControl = false,
+    hasLight = false,
+    alpha = 0,
+    playMusic = false;
+var currentTexture = null;
+var currentMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+
+
 function init() {
     var scene = new THREE.Scene();
     var loader = new GLTFLoader();
@@ -28,10 +37,11 @@ function init() {
     });
     let hasFeature = false;
     let colorFolder, materialFolder;
+    //Handle event on click geometry
     $(".geometry").click(function () {
         var geometryName = $(this).text();
         var geometry;
-        var material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        var material = currentMaterial;
 
         switch (geometryName) {
             case "Box":
@@ -282,6 +292,60 @@ function init() {
         }
 
     });
+        // Handle event on click texture
+    $(".texture").click(function () {
+        var loader = new THREE.TextureLoader();
+        var materialName = $(this).text();
+
+        // Ensure the current geometry is retrieved properly
+        var currentObject = scene.getObjectByName("geometry");
+        if (!currentObject) {
+            console.error("No geometry found to apply the texture.");
+            return;
+        }
+
+        geometry = currentObject.geometry; // Get the current geometry
+
+        switch (materialName) {
+            case "Floral Pattern":
+                currentMaterial = new THREE.MeshBasicMaterial({
+                    map: loader.load("./assets/textures/flowers.webp"),
+                });
+                break;
+            case "Wood Pattern":
+                currentMaterial = new THREE.MeshBasicMaterial({
+                    map: loader.load("./assets/textures/wood.webp"),
+                });
+                break;
+            case "Planet Surface":
+                currentMaterial = new THREE.MeshBasicMaterial({
+                    map: loader.load("./assets/textures/solar.jpg"),
+                });
+                break;
+            case "Ocean Video":
+                var video = document.createElement('video');
+                video.loop = true;
+                video.src = "./assets/textures/ocean.mp4"; // replace with your GIF file path
+                video.load();
+                video.play();
+
+                var videoTexture = new THREE.VideoTexture(video);
+                currentMaterial = new THREE.MeshBasicMaterial({ map: videoTexture });
+                break;
+            case "Remove Texture":
+                currentMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+                break;
+        }
+
+        if (currentMaterial && geometry) {
+            scene.remove(currentObject); // Remove the existing mesh
+            mesh = new THREE.Mesh(geometry, currentMaterial);
+            mesh.name = "geometry";
+            mesh.castShadow = true; // Shadow (đổ bóng).
+            scene.add(mesh); // Add the new mesh with the updated material
+        }
+    });
+    
 
     var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.set(10, 7, 20);
@@ -342,6 +406,99 @@ function init() {
 function update(renderer, scene, camera, controls) {
     renderer.render(scene, camera);
     controls.update();
+    
+    var geometry = scene.getObjectByName("geometry");
+    var name = $(".animation.active").text();
+    switch (name) {
+        case "Animation 1":
+            // Di chuyển geometry thành 1 vòng tròn và lên xuống
+            var radius = 35; // Bán kính của vòng tròn
+            var speed = 0.0008; // Tốc độ di chuyển
+            var rotationSpeed = 0.001; // Tốc độ quay
+            var height = 60; // Biên độ của chuyển động lên xuống
+            var angle = Date.now() * speed; // Góc xoay
+
+            // Tính toán vị trí mới của geometry trên vòng tròn
+            var x = Math.cos(angle) * radius;
+            var z = Math.sin(angle) * radius;
+            var y = Math.sin(angle * 2) * height; // Lên xuống
+
+            geometry.position.set(x, y, z);
+
+            // Cập nhật góc quay của geometry
+            var rotationAngle = Date.now() * rotationSpeed;
+            geometry.rotation.y = rotationAngle;
+
+            break;
+        case "Animation 2":
+            // Animation di chuyển theo hình ngôi sao
+            var starPoints = 5; // Số cánh của ngôi sao
+            var outerRadius = 50; // Bán kính ngoài của ngôi sao
+            var innerRadius = 20; // Bán kính trong của ngôi sao
+            var speed = 0.001; // Tốc độ di chuyển
+            var time = Date.now() * speed;
+            var starVertices = [];
+
+            // Tạo các điểm cho ngôi sao
+            for (let i = 0; i < 2 * starPoints; i++) {
+                let radius = i % 2 === 0 ? outerRadius : innerRadius;
+                let angle = (i * Math.PI) / starPoints;
+                starVertices.push({
+                    x: Math.cos(angle) * radius,
+                    y: Math.sin(angle) * radius
+                });
+            }
+
+            // Xác định vị trí hiện tại dựa trên thời gian
+            var index = Math.floor(time) % starVertices.length;
+            var nextIndex = (index + 1) % starVertices.length;
+            var progress = time % 1;
+
+            // Nội suy giữa các điểm để di chuyển mượt mà
+            var currentX = THREE.MathUtils.lerp(starVertices[index].x, starVertices[nextIndex].x, progress);
+            var currentY = THREE.MathUtils.lerp(starVertices[index].y, starVertices[nextIndex].y, progress);
+
+            geometry.position.set(currentX, currentY, 0);
+
+            break;
+            
+        case "Animation 3":
+            //di chuyển theo hình cánh bướm
+            var time = Date.now() * 0.001;
+            var scale = 10;
+
+            var x = scale * Math.sin(time) * (Math.exp(Math.cos(time)) - 2 * Math.cos(4 * time) - Math.pow(Math.sin(time / 12), 5));
+            var y = scale * Math.cos(time) * (Math.exp(Math.cos(time)) - 2 * Math.cos(4 * time) - Math.pow(Math.sin(time / 12), 5));
+            var z = scale * Math.sin(time / 4);
+
+            geometry.position.set(x, y, z);
+            break;
+        case "Animation 4":
+            // Lemniscate of Bernoulli
+            var scale = 30;
+            var time = Date.now() * 0.001;
+        
+            var x = scale * Math.cos(time) / (1 + Math.sin(time) * Math.sin(time));
+            var y = scale * Math.cos(time) * Math.sin(time) / (1 + Math.sin(time) * Math.sin(time));
+            var z = scale * Math.sin(time / 2);
+        
+            geometry.position.set(x, y, z);
+        
+            // Cập nhật góc quay của geometry
+            var rotationSpeed = 0.001; // Tốc độ quay
+            var rotationAngle = Date.now() * rotationSpeed;
+            geometry.rotation.x += rotationSpeed;
+            geometry.rotation.y = rotationAngle;
+            geometry.rotation.z += rotationSpeed;
+        
+            break;
+            
+        case "Animation 5":
+            
+            break;
+            
+    }
+
     requestAnimationFrame(function () {
         update(renderer, scene, camera, controls);
     });
