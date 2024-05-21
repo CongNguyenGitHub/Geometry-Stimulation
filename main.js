@@ -5,8 +5,7 @@ import { GLTFLoader } from "lib/GLTFLoader.js";
 import { GLTFExporter } from "lib/GLTFExporter.js";
 import { TransformControls } from "lib/TransformControls.js";
 
-var activeControl = false,
-    hasLight = false,
+var hasLight = false,
     alpha = 0,
     playMusic = false;
 var currentTexture = null;
@@ -39,6 +38,8 @@ function init() {
     let colorFolder, materialFolder;
     //Handle event on click geometry
     $(".geometry").click(function () {
+        resetButtons(); // Để mất trục tọa độ từ affine
+        transformControls.detach();
         var geometryName = $(this).text();
         var geometry;
         var material = currentMaterial;
@@ -233,6 +234,9 @@ function init() {
     });
 
     $(".light").click(function() {
+        resetButtons(); // Reset button states
+        transformControls.detach(); // Detach any active transform controls
+
         var plane = getPlane(150);
         
         if (hasLight == true) {
@@ -294,6 +298,9 @@ function init() {
     });
     // Handle event on click texture
     $(".texture").click(function () {
+        resetButtons(); // Để mất trục tọa độ từ affine
+        transformControls.detach();
+
         var loader = new THREE.TextureLoader();
         var materialName = $(this).text();
 
@@ -347,6 +354,8 @@ function init() {
     });
     //Handle event on click animation
     $(".animation").click(function () {
+        resetButtons(); // Để mất trục tọa độ từ affine
+        transformControls.detach();
         var $nameAnimation = $(this).text();
         if ($(".animation.active").hasClass("active")) {
             $(".animation.active").removeClass("active");
@@ -391,28 +400,44 @@ function init() {
     var transformControlsEnabled = false;
     scene.add(transformControls);
 
-    $("#translate-light").click(function() {
-        if ($(this).hasClass("icons-clicked")) {
-            controls.enabled = true;
-            transformControlsEnabled = false;
-            transformControls.detach();
-            $(this).removeClass("icons-clicked");
-        }
-        else {
-            if (scene.getObjectByName("light")) {
-                controls.enabled = false;
+    function setupTransformControl(buttonId, objectName, mode) {
+        $(buttonId).click(function() {
+            // Để các icon không cùng lúc hiển thị active
+            $("#translate-light, #translate, #rotate, #scale").removeClass("icons-clicked");
+           
+            if ($(this).hasClass("icons-clicked")) {
+                controls.enabled = true;
+                transformControlsEnabled = false;
                 transformControls.detach();
-                transformControls.setMode("translate");
-                transformControls.attach(scene.getObjectByName("light"));
-                transformControls.addEventListener("change", function() {
-                    lightHelper.update();
-                });
-                transformControlsEnabled = true;
-                $(this).addClass("icons-clicked");
+                $(this).removeClass("icons-clicked");
+            } else {
+                var object = scene.getObjectByName(objectName);
+                if (object) {
+         
+                    controls.enabled = false;
+                    transformControls.detach();
+                    transformControls.setMode(mode);
+                    transformControls.attach(object);
+                    if (objectName === "light" && mode === "translate") {
+                        transformControls.addEventListener("change", function() {
+                            //lightHelper.update();
+                        });
+                    }
+                    transformControlsEnabled = true;
+                    $(this).addClass("icons-clicked");
+                }
+                
             }
-        }
-        
-    });
+        });
+    }
+    
+    
+    // Gọi hàm cho các trường hợp cụ thể
+    setupTransformControl("#translate-light", "light", "translate");
+    setupTransformControl("#translate", "geometry", "translate");
+    setupTransformControl("#rotate", "geometry", "rotate");
+    setupTransformControl("#scale", "geometry", "scale");
+    
 
     transformControls.addEventListener("mousedown", function() {
         controls.enabled = false;
@@ -428,6 +453,7 @@ function init() {
 
     update(renderer, scene, camera, controls);
 }
+
 function update(renderer, scene, camera, controls) {
     renderer.render(scene, camera);
     controls.update();
@@ -537,6 +563,9 @@ function update(renderer, scene, camera, controls) {
     });
 }
 
+function resetButtons() { // Để mất trục tọa độ từ affine
+    $("#translate-light, #translate, #rotate, #scale").removeClass("icons-clicked"); // Hủy chọn button
+}
 
 function getHeart() {
     const x = -10,
