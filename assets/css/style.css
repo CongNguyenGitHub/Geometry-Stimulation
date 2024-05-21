@@ -284,3 +284,6 @@ canvas {
     box-shadow: 0 0 4px rgb(255 255 255 / 10%);
     visibility: hidden;
 }
+.animation-link {
+    min-width: 200px; /* Adjust the width as needed */
+}

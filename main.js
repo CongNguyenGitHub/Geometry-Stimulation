@@ -292,7 +292,7 @@ function init() {
         }
 
     });
-        // Handle event on click texture
+    // Handle event on click texture
     $(".texture").click(function () {
         var loader = new THREE.TextureLoader();
         var materialName = $(this).text();
@@ -343,6 +343,32 @@ function init() {
             mesh.name = "geometry";
             mesh.castShadow = true; // Shadow (đổ bóng).
             scene.add(mesh); // Add the new mesh with the updated material
+        }
+    });
+    //Handle event on click animation
+    $(".animation").click(function () {
+        var $nameAnimation = $(this).text();
+        if ($(".animation.active").hasClass("active")) {
+            $(".animation.active").removeClass("active");
+        }
+        switch ($nameAnimation) {
+            case "Animation 1":
+                $(this).addClass("active");
+                break;
+            case "Animation 2":
+                $(this).addClass("active");
+                break;
+            case "Animation 3":
+                $(this).addClass("active");
+                break;
+            case "Animation 4":
+                $(this).addClass("active");
+                break;
+            case "Animation 5":
+                $(this).addClass("active");
+                break;
+            case "Remove Animation":
+                break;
         }
     });
     
@@ -402,12 +428,20 @@ function init() {
 
     update(renderer, scene, camera, controls);
 }
-
 function update(renderer, scene, camera, controls) {
     renderer.render(scene, camera);
     controls.update();
     
-    var geometry = scene.getObjectByName("geometry");
+    // Fetch the current geometry from the scene
+    var geometryObject = scene.getObjectByName("geometry");
+    if (!geometryObject) {
+        requestAnimationFrame(function () {
+            update(renderer, scene, camera, controls);
+        });
+        return;
+    }
+    var geometry = geometryObject.geometry;
+
     var name = $(".animation.active").text();
     switch (name) {
         case "Animation 1":
@@ -423,11 +457,11 @@ function update(renderer, scene, camera, controls) {
             var z = Math.sin(angle) * radius;
             var y = Math.sin(angle * 2) * height; // Lên xuống
 
-            geometry.position.set(x, y, z);
+            geometryObject.position.set(x, y, z);
 
             // Cập nhật góc quay của geometry
             var rotationAngle = Date.now() * rotationSpeed;
-            geometry.rotation.y = rotationAngle;
+            geometryObject.rotation.y = rotationAngle;
 
             break;
         case "Animation 2":
@@ -458,12 +492,12 @@ function update(renderer, scene, camera, controls) {
             var currentX = THREE.MathUtils.lerp(starVertices[index].x, starVertices[nextIndex].x, progress);
             var currentY = THREE.MathUtils.lerp(starVertices[index].y, starVertices[nextIndex].y, progress);
 
-            geometry.position.set(currentX, currentY, 0);
+            geometryObject.position.set(currentX, currentY, 0);
 
             break;
             
         case "Animation 3":
-            //di chuyển theo hình cánh bướm
+            // Di chuyển theo hình cánh bướm
             var time = Date.now() * 0.001;
             var scale = 10;
 
@@ -471,7 +505,7 @@ function update(renderer, scene, camera, controls) {
             var y = scale * Math.cos(time) * (Math.exp(Math.cos(time)) - 2 * Math.cos(4 * time) - Math.pow(Math.sin(time / 12), 5));
             var z = scale * Math.sin(time / 4);
 
-            geometry.position.set(x, y, z);
+            geometryObject.position.set(x, y, z);
             break;
         case "Animation 4":
             // Lemniscate of Bernoulli
@@ -482,27 +516,27 @@ function update(renderer, scene, camera, controls) {
             var y = scale * Math.cos(time) * Math.sin(time) / (1 + Math.sin(time) * Math.sin(time));
             var z = scale * Math.sin(time / 2);
         
-            geometry.position.set(x, y, z);
+            geometryObject.position.set(x, y, z);
         
             // Cập nhật góc quay của geometry
             var rotationSpeed = 0.001; // Tốc độ quay
             var rotationAngle = Date.now() * rotationSpeed;
-            geometry.rotation.x += rotationSpeed;
-            geometry.rotation.y = rotationAngle;
-            geometry.rotation.z += rotationSpeed;
+            geometryObject.rotation.x += rotationSpeed;
+            geometryObject.rotation.y = rotationAngle;
+            geometryObject.rotation.z += rotationSpeed;
         
             break;
             
         case "Animation 5":
-            
+            // Add your Animation 5 logic here if needed.
             break;
-            
     }
 
     requestAnimationFrame(function () {
         update(renderer, scene, camera, controls);
     });
 }
+
 
 function getHeart() {
     const x = -10,
