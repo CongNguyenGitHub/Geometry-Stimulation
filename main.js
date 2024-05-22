@@ -519,12 +519,9 @@ function update(renderer, scene, camera, controls) {
             }
             
             meshes.forEach(function(mesh) {
-                /*mesh.position.y += 0.05;
+                mesh.position.y += 0.05;
                 mesh.rotation.x += 0.02;
-                mesh.rotation.y += 0.02;*/
-                mesh.position.y = (Math.sin(Date.now() * 0.002) + 1) * 10;
-                mesh.rotation.y = Date.now() * 0.002;
-                mesh.rotation.z = Date.now() * 0.001;
+                mesh.rotation.y += 0.02;
             });
             break;
         case "Animation 2":
