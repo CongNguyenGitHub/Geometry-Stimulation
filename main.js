@@ -385,7 +385,7 @@ function init() {
     var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.set(10, 7, 20);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
-
+    
     var cameraGUI = gui.addFolder("Camera");
     cameraGUI.add(camera, "fov", 0, 175).name("FOV").onChange(updateCamera);
     cameraGUI.add(camera, "near", 1, 50, 1).name("Near").onChange(updateCamera);
@@ -393,7 +393,10 @@ function init() {
     cameraGUI.open();
 
     function updateCamera() {
+        resetButtons(); // Để mất trục tọa độ từ affine
+        transformControls.detach();
         camera.updateProjectionMatrix();
+        
     }
 
     var renderer = new THREE.WebGLRenderer({ antialias: true });
