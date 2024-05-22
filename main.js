@@ -386,6 +386,16 @@ function init() {
     camera.position.set(10, 7, 20);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
+    var cameraGUI = gui.addFolder("Camera");
+    cameraGUI.add(camera, "fov", 0, 175).name("FOV").onChange(updateCamera);
+    cameraGUI.add(camera, "near", 1, 50, 1).name("Near").onChange(updateCamera);
+    cameraGUI.add(camera, "far", 1000, 5000, 10).name("Far").onChange(updateCamera);
+    cameraGUI.open();
+
+    function updateCamera() {
+        camera.updateProjectionMatrix();
+    }
+
     var renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight - 46);
     renderer.setClearColor("#333");
