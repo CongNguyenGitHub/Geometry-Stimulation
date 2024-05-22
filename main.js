@@ -8,10 +8,14 @@ import { TransformControls } from "lib/TransformControls.js";
 var hasLight = false,
     alpha = 0,
     playMusic = false;
-var currentTexture = null;
 var currentMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+var currentGeo = null;
+var meshes = []; // Array to store the meshes
+var lastMeshCreationTime = Date.now(); // Track the time of the last mesh creation
 
-
+function isAnimationActive() {
+    return $(".animation.active").length > 0;
+}
 
 function init() {
     var scene = new THREE.Scene();
@@ -94,12 +98,14 @@ function init() {
                 });
                 return;
         }
-
+        currentGeo = geometry;
         var mesh = new THREE.Mesh(geometry, material);
         scene.remove(scene.getObjectByName("geometry"));
         mesh.name = "geometry";
         mesh.castShadow = true;
-        scene.add(mesh);
+        if (!isAnimationActive())
+            {scene.add(mesh);}
+      
 
         if (hasFeature) {
             if (colorFolder) gui.removeFolder(colorFolder);
@@ -349,7 +355,9 @@ function init() {
             mesh = new THREE.Mesh(geometry, currentMaterial);
             mesh.name = "geometry";
             mesh.castShadow = true; // Shadow (đổ bóng).
-            scene.add(mesh); // Add the new mesh with the updated material
+            if (!isAnimationActive())
+                {scene.add(mesh);}
+            //scene.add(mesh); // Add the new mesh with the updated material
         }
     });
     //Handle event on click animation
@@ -484,55 +492,75 @@ function update(renderer, scene, camera, controls) {
     var name = $(".animation.active").text();
     switch (name) {
         case "Animation 1":
+            geometryObject.visible = false;
             // Di chuyển geometry thành 1 vòng tròn và lên xuống
-            var radius = 35; // Bán kính của vòng tròn
-            var speed = 0.0008; // Tốc độ di chuyển
-            var rotationSpeed = 0.001; // Tốc độ quay
-            var height = 60; // Biên độ của chuyển động lên xuống
-            var angle = Date.now() * speed; // Góc xoay
+            var elapsedTime = Date.now() - lastMeshCreationTime;
+            if (elapsedTime >= 2000) {
+                var newMesh = new THREE.Mesh(currentGeo, currentMaterial);
+                newMesh.name = "geometry";
+                // Generate random positions within a specified range (adjust as needed)
+                var minX = -50, maxX =50;
+                var minY = -15, maxY = 40;
+                var minZ = -50, maxZ = 50;
 
-            // Tính toán vị trí mới của geometry trên vòng tròn
-            var x = Math.cos(angle) * radius;
-            var z = Math.sin(angle) * radius;
-            var y = Math.sin(angle * 2) * height; // Lên xuống
+                newMesh.position.x = Math.random() * (maxX - minX) + minX;
+                newMesh.position.y = Math.random() * (maxY - minY) + minY;
+                newMesh.position.z = Math.random() * (maxZ - minZ) + minZ;
 
-            geometryObject.position.set(x, y, z);
-
-            // Cập nhật góc quay của geometry
-            var rotationAngle = Date.now() * rotationSpeed;
-            geometryObject.rotation.y = rotationAngle;
-
+                scene.add(newMesh);
+                meshes.push(newMesh);
+    
+                if (meshes.length > 20) {
+                    var oldMesh = meshes.shift();
+                    scene.remove(oldMesh);
+                }
+    
+                lastMeshCreationTime = Date.now();
+            }
+            
+            meshes.forEach(function(mesh) {
+                /*mesh.position.y += 0.05;
+                mesh.rotation.x += 0.02;
+                mesh.rotation.y += 0.02;*/
+                mesh.position.y = (Math.sin(Date.now() * 0.002) + 1) * 10;
+                mesh.rotation.y = Date.now() * 0.002;
+                mesh.rotation.z = Date.now() * 0.001;
+            });
             break;
         case "Animation 2":
-            // Animation di chuyển theo hình ngôi sao
-            var starPoints = 5; // Số cánh của ngôi sao
-            var outerRadius = 50; // Bán kính ngoài của ngôi sao
-            var innerRadius = 20; // Bán kính trong của ngôi sao
-            var speed = 0.001; // Tốc độ di chuyển
-            var time = Date.now() * speed;
-            var starVertices = [];
+            geometryObject.visible = false;
+            // Di chuyển geometry thành 1 vòng tròn và lên xuống
+            var elapsedTime = Date.now() - lastMeshCreationTime;
+            if (elapsedTime >= 2000) {
+                var newMesh = new THREE.Mesh(currentGeo, currentMaterial);
+                newMesh.name = "geometry";
+                // Generate random positions within a specified range (adjust as needed)
+                var minX = -50, maxX =50;
+                var minY = -15, maxY = 40;
+                var minZ = -50, maxZ = 50;
 
-            // Tạo các điểm cho ngôi sao
-            for (let i = 0; i < 2 * starPoints; i++) {
-                let radius = i % 2 === 0 ? outerRadius : innerRadius;
-                let angle = (i * Math.PI) / starPoints;
-                starVertices.push({
-                    x: Math.cos(angle) * radius,
-                    y: Math.sin(angle) * radius
-                });
+                newMesh.position.x = Math.random() * (maxX - minX) + minX;
+                newMesh.position.y = Math.random() * (maxY - minY) + minY;
+                newMesh.position.z = Math.random() * (maxZ - minZ) + minZ;
+
+                scene.add(newMesh);
+                meshes.push(newMesh);
+    
+                if (meshes.length > 20) {
+                    var oldMesh = meshes.shift();
+                    scene.remove(oldMesh);
+                }
+    
+                lastMeshCreationTime = Date.now();
             }
-
-            // Xác định vị trí hiện tại dựa trên thời gian
-            var index = Math.floor(time) % starVertices.length;
-            var nextIndex = (index + 1) % starVertices.length;
-            var progress = time % 1;
-
-            // Nội suy giữa các điểm để di chuyển mượt mà
-            var currentX = THREE.MathUtils.lerp(starVertices[index].x, starVertices[nextIndex].x, progress);
-            var currentY = THREE.MathUtils.lerp(starVertices[index].y, starVertices[nextIndex].y, progress);
-
-            geometryObject.position.set(currentX, currentY, 0);
-
+            
+            meshes.forEach(function(mesh, index) {
+                var offset = index * 10; // Độ cao khác nhau giữa các mesh
+        
+                mesh.position.y = (Math.sin((Date.now() + offset) * 0.002) + 1) * 10;
+                mesh.rotation.y = (Date.now() + offset) * 0.002;
+                mesh.rotation.z = (Date.now() + offset) * 0.001;
+            });
             break;
             
         case "Animation 3":
