@@ -264,18 +264,18 @@ function init() {
 
             switch (lightName) {
                 case "Point Light":
-                    light = getPointLight("#fff", 10, 50, 0.5);
+                    light = getPointLight("#fff", 20, 100, 0.5);
                     light.position.set(5,10,5);
                     lightHelper = new THREE.PointLightHelper(light, 1);
                     break;
                 case "Spot Light":
-                    light = getSpotLight("#fff", 10, 50, 0.5, 0.1);
+                    light = getSpotLight("#fff", 20, 100, 0.5, 0);
                     light.position.set(5,10,0);
                     lightHelper = new THREE.SpotLightHelper(light);
                     lightGUI.add(light, "penumbra", 0, 1);
                     break;
                 case "Directional Light":
-                    light = getDirectionalLight("#fff", 10, 50, 0.5);
+                    light = getDirectionalLight("#fff", 20, 100, 0.5);
                     light.position.set(5,10,5);
                     lightHelper = new THREE.DirectionalLightHelper(light);
                     break;
@@ -295,7 +295,7 @@ function init() {
                 light.color.set(value);
             });
             lightGUI.add(light, "intensity", 0, 100);
-            lightGUI.add(light, "distance", 0, 100);
+            lightGUI.add(light, "distance", 0, 300);
             lightGUI.add(light, "decay", 0, 5);
 
             lightGUI.open();
@@ -441,7 +441,7 @@ function init() {
                     transformControls.attach(object);
                     if (objectName === "light" && mode === "translate") {
                         transformControls.addEventListener("change", function() {
-                            //lightHelper.update();
+                        lightHelper.update();
                         });
                     }
                     transformControlsEnabled = true;
@@ -498,6 +498,7 @@ function update(renderer, scene, camera, controls) {
             if (elapsedTime >= 2000) {
                 var newMesh = new THREE.Mesh(currentGeo, currentMaterial);
                 newMesh.name = "geometry";
+                newMesh.castShadow = true;
                 // Generate random positions within a specified range (adjust as needed)
                 var minX = -50, maxX =50;
                 var minY = -15, maxY = 40;
@@ -531,6 +532,7 @@ function update(renderer, scene, camera, controls) {
             if (elapsedTime >= 2000) {
                 var newMesh = new THREE.Mesh(currentGeo, currentMaterial);
                 newMesh.name = "geometry";
+                newMesh.castShadow = true;
                 // Generate random positions within a specified range (adjust as needed)
                 var minX = -50, maxX =50;
                 var minY = -15, maxY = 40;
