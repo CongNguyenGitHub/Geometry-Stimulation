@@ -423,34 +423,41 @@ function init() {
 
     function setupTransformControl(buttonId, objectName, mode) {
         $(buttonId).click(function() {
+            // Kiểm tra trạng thái của nút hiện tại
+            var isActive = $(this).hasClass("icons-clicked");
+    
             // Để các icon không cùng lúc hiển thị active
             $("#translate-light, #translate, #rotate, #scale").removeClass("icons-clicked");
-           
-            if ($(this).hasClass("icons-clicked")) {
+            
+            if (isActive) {
+                // Nếu nút đang active, tắt chức năng và đổi màu lại
                 controls.enabled = true;
                 transformControlsEnabled = false;
                 transformControls.detach();
                 $(this).removeClass("icons-clicked");
             } else {
+                // Nếu nút chưa active, bật chức năng và đổi màu
                 var object = scene.getObjectByName(objectName);
                 if (object) {
-         
                     controls.enabled = false;
                     transformControls.detach();
                     transformControls.setMode(mode);
                     transformControls.attach(object);
                     if (objectName === "light" && mode === "translate") {
                         transformControls.addEventListener("change", function() {
-                        lightHelper.update();
+                            lightHelper.update();
                         });
                     }
                     transformControlsEnabled = true;
                     $(this).addClass("icons-clicked");
                 }
-                
             }
         });
     }
+
+    transformControls.addEventListener('dragging-changed', function(event) {
+        controls.enabled = !event.value;
+    });
     
     
     // Gọi hàm cho các trường hợp cụ thể
