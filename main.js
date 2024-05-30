@@ -362,8 +362,8 @@ function init() {
         resetButtons(); // Để mất trục tọa độ từ affine
         transformControls.detach();
         var $nameAnimation = $(this).text();
-        if ($(".animation.active").hasClass("active")) {
-            $(".animation.active").removeClass("active");
+        if ($(".animation.active").removeClass("active")) {
+            $(".animation.active").hasClass("active");
         }
         switch ($nameAnimation) {
             case "Animation 1":
@@ -392,6 +392,7 @@ function init() {
                     newMesh.castShadow = true;
                     scene.add(newMesh);
                 }
+                $(".animation").removeClass("active");
                 break;
         }
     });
@@ -431,12 +432,20 @@ function init() {
 
     function setupTransformControl(buttonId, objectName, mode) {
         $(buttonId).click(function() {
+            // Kiểm tra trạng thái của animation đang active
+            var isAnimationActive = $(".animation.active").length > 0;
+    
+            // Nếu có animation đang active và buttonId không phải là "#translate-light"
+            if (isAnimationActive && buttonId !== "#translate-light") {
+                return; // Không cho phép click vào các nút "translate", "rotate", "scale" khi có animation active
+            }
+    
             // Kiểm tra trạng thái của nút hiện tại
             var isActive = $(this).hasClass("icons-clicked");
     
             // Để các icon không cùng lúc hiển thị active
             $("#translate-light, #translate, #rotate, #scale").removeClass("icons-clicked");
-            
+    
             if (isActive) {
                 // Nếu nút đang active, tắt chức năng và đổi màu lại
                 controls.enabled = true;
@@ -462,6 +471,7 @@ function init() {
             }
         });
     }
+    
 
     transformControls.addEventListener('dragging-changed', function(event) {
         controls.enabled = !event.value;
