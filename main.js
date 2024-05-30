@@ -445,7 +445,7 @@ function init() {
                     transformControls.attach(object);
                     if (objectName === "light" && mode === "translate") {
                         transformControls.addEventListener("change", function() {
-                            //lightHelper.update();
+                            //lightHelper.update(); // Không thực hiện cập nhật ở đây mà ở transformControls.addEventListener bên dưới: tức là di chuyển xong mới cập nhật
                         });
                     }
                     transformControlsEnabled = true;
@@ -457,6 +457,13 @@ function init() {
 
     transformControls.addEventListener('dragging-changed', function(event) {
         controls.enabled = !event.value;
+        if (event.value) {
+            // Bắt đầu di chuyển - tạm ngừng cập nhật lightHelper
+            // Dùng lightHelper.update() khi thả chuột (dragging-changed -> false)
+        } else {
+            // Kết thúc di chuyển - cập nhật lightHelper
+            lightHelper.update();
+        }
     });
     
     
@@ -470,6 +477,10 @@ function init() {
     transformControls.addEventListener("mousedown", function() {
         controls.enabled = false;
         transformControlsEnabled = true;
+    });
+    
+    transformControls.addEventListener('change', function() {
+        // Không cần gọi lightHelper.update() ở đây
     });
     
     document.addEventListener("mousedown", function() {
