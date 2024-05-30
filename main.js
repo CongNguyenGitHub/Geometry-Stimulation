@@ -372,19 +372,30 @@ function init() {
             case "Animation 2":
                 $(this).addClass("active");
                 break;
-            case "Animation 3":
-                $(this).addClass("active");
-                break;
-            case "Animation 4":
-                $(this).addClass("active");
-                break;
-            case "Animation 5":
-                $(this).addClass("active");
-                break;
             case "Remove Animation":
+                // Remove all geometries from the scene
+                meshes.forEach(function(mesh) {
+                    scene.remove(mesh);
+                });
+                meshes = [];
+    
+                // Remove the current geometry object
+                var geometryObject = scene.getObjectByName("geometry");
+                if (geometryObject) {
+                    scene.remove(geometryObject);
+                }
+    
+                // Recreate the initial geometry
+                if (currentGeo && currentMaterial) {
+                    var newMesh = new THREE.Mesh(currentGeo, currentMaterial);
+                    newMesh.name = "geometry";
+                    newMesh.castShadow = true;
+                    scene.add(newMesh);
+                }
                 break;
         }
     });
+    
     
 
     var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
@@ -510,7 +521,7 @@ function update(renderer, scene, camera, controls) {
             geometryObject.visible = false;
             // Di chuyển geometry thành 1 vòng tròn và lên xuống
             var elapsedTime = Date.now() - lastMeshCreationTime;
-            if (elapsedTime >= 2000) {
+            if (elapsedTime >= 800) {
                 var newMesh = new THREE.Mesh(currentGeo, currentMaterial);
                 newMesh.name = "geometry";
                 newMesh.castShadow = true;
@@ -544,72 +555,65 @@ function update(renderer, scene, camera, controls) {
             geometryObject.visible = false;
             // Di chuyển geometry thành 1 vòng tròn và lên xuống
             var elapsedTime = Date.now() - lastMeshCreationTime;
-            if (elapsedTime >= 2000) {
+            if (elapsedTime >= 1000) {
                 var newMesh = new THREE.Mesh(currentGeo, currentMaterial);
                 newMesh.name = "geometry";
                 newMesh.castShadow = true;
-                // Generate random positions within a specified range (adjust as needed)
-                var minX = -50, maxX =50;
+                
+                // Generate non-overlapping random positions within a specified range (adjust as needed)
+                var minX = -50, maxX = 50;
                 var minY = -15, maxY = 40;
                 var minZ = -50, maxZ = 50;
+                
+                var positionFound = false;
+                var maxAttempts = 100; // Maximum attempts to find a non-overlapping position
+                var attempts = 0;
 
-                newMesh.position.x = Math.random() * (maxX - minX) + minX;
-                newMesh.position.y = Math.random() * (maxY - minY) + minY;
-                newMesh.position.z = Math.random() * (maxZ - minZ) + minZ;
+                while (!positionFound && attempts < maxAttempts) {
+                    var posX = Math.random() * (maxX - minX) + minX;
+                    var posY = Math.random() * (maxY - minY) + minY;
+                    var posZ = Math.random() * (maxZ - minZ) + minZ;
 
-                scene.add(newMesh);
-                meshes.push(newMesh);
-    
-                if (meshes.length > 20) {
-                    var oldMesh = meshes.shift();
-                    scene.remove(oldMesh);
+                    newMesh.position.set(posX, posY, posZ);
+
+                    var collision = false;
+                    for (var i = 0; i < meshes.length; i++) {
+                        if (newMesh.position.distanceTo(meshes[i].position) < 10) { // Adjust the distance threshold as needed
+                            collision = true;
+                            break;
+                        }
+                    }
+
+                    if (!collision) {
+                        positionFound = true;
+                    }
+
+                    attempts++;
                 }
-    
-                lastMeshCreationTime = Date.now();
-            }
-            
-            meshes.forEach(function(mesh, index) {
-                var offset = index * 10; // Độ cao khác nhau giữa các mesh
-        
-                mesh.position.y = (Math.sin((Date.now() + offset) * 0.002) + 1) * 10;
-                mesh.rotation.y = (Date.now() + offset) * 0.002;
-                mesh.rotation.z = (Date.now() + offset) * 0.001;
-            });
-            break;
-            
-        case "Animation 3":
-            // Di chuyển theo hình cánh bướm
-            var time = Date.now() * 0.001;
-            var scale = 10;
 
-            var x = scale * Math.sin(time) * (Math.exp(Math.cos(time)) - 2 * Math.cos(4 * time) - Math.pow(Math.sin(time / 12), 5));
-            var y = scale * Math.cos(time) * (Math.exp(Math.cos(time)) - 2 * Math.cos(4 * time) - Math.pow(Math.sin(time / 12), 5));
-            var z = scale * Math.sin(time / 4);
+                if (positionFound) {
+                    scene.add(newMesh);
+                    meshes.push(newMesh);
 
-            geometryObject.position.set(x, y, z);
-            break;
-        case "Animation 4":
-            // Lemniscate of Bernoulli
-            var scale = 30;
-            var time = Date.now() * 0.001;
-        
-            var x = scale * Math.cos(time) / (1 + Math.sin(time) * Math.sin(time));
-            var y = scale * Math.cos(time) * Math.sin(time) / (1 + Math.sin(time) * Math.sin(time));
-            var z = scale * Math.sin(time / 2);
-        
-            geometryObject.position.set(x, y, z);
-        
-            // Cập nhật góc quay của geometry
-            var rotationSpeed = 0.001; // Tốc độ quay
-            var rotationAngle = Date.now() * rotationSpeed;
-            geometryObject.rotation.x += rotationSpeed;
-            geometryObject.rotation.y = rotationAngle;
-            geometryObject.rotation.z += rotationSpeed;
-        
-            break;
-            
-        case "Animation 5":
-            // Add your Animation 5 logic here if needed.
+                    if (meshes.length > 15) {
+                        var oldMesh = meshes.shift();
+                        scene.remove(oldMesh);
+                    }
+
+                    lastMeshCreationTime = Date.now();
+                } else {
+                    console.warn("Failed to find a non-overlapping position for the new mesh after maximum attempts.");
+                }
+    }
+
+    meshes.forEach(function(mesh, index) {
+        var offset = index * 10; // Độ cao khác nhau giữa các mesh
+
+        mesh.position.y = (Math.sin((Date.now() + offset) * 0.002) + 1) * 10;
+        mesh.rotation.y = (Date.now() + offset) * 0.002;
+        mesh.rotation.z = (Date.now() + offset) * 0.001;
+    });
+
             break;
     }
 
