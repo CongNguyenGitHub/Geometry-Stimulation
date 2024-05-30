@@ -24,8 +24,6 @@ function init() {
     $(".move_gui").append($(gui.domElement));
     var geometry, material, mesh;
     var light, lightHelper, lightGUI, hasLight = false;
-    material = new THREE.MeshPhongMaterial({ color: "#ffffff" });
-
     var gridHelper = new THREE.GridHelper(150, 30, "#fff", "#fff");
     gridHelper.position.y = -0.1;
     scene.add(gridHelper);
@@ -45,8 +43,7 @@ function init() {
         resetButtons(); // Để mất trục tọa độ từ affine
         transformControls.detach();
         var geometryName = $(this).text();
-        var geometry;
-        var material = currentMaterial;
+        material = currentMaterial;
 
         switch (geometryName) {
             case "Box":
@@ -99,7 +96,7 @@ function init() {
                 return;
         }
         currentGeo = geometry;
-        var mesh = new THREE.Mesh(geometry, material);
+        mesh = new THREE.Mesh(geometry, material);
         scene.remove(scene.getObjectByName("geometry"));
         mesh.name = "geometry";
         mesh.castShadow = true;
