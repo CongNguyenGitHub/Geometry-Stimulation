@@ -445,7 +445,7 @@ function init() {
                     transformControls.attach(object);
                     if (objectName === "light" && mode === "translate") {
                         transformControls.addEventListener("change", function() {
-                            lightHelper.update();
+                            //lightHelper.update();
                         });
                     }
                     transformControlsEnabled = true;
