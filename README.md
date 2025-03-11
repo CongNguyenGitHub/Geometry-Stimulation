@@ -3,7 +3,6 @@
 ## Overview
 Geometry Simulator is a **3D interactive web application** that allows users to visualize and manipulate geometric objects. It provides an intuitive interface for applying transformations such as translation, rotation, and scaling, making it a useful tool for learning and exploring geometry concepts.
 
-![Project Preview](docs/project_preview.png)
 
 ## Features
 - **3D Object Rendering**: Uses **Three.js** to render geometric shapes in a dynamic environment.
